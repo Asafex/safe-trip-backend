@@ -8,12 +8,14 @@ app.use(express.json());
 
 // 📌 Conexão com o MySQL da Railway
 const db = mysql.createConnection({
-    host: "mysql.railway.internal",
-    user: "root",
-    password: "MRPspnBuFIxGgmuVBibNTyqmCtJLEGBQ",
-    database: "railway",
-    port: 3306
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_DATABASE,
+    port: process.env.DB_PORT
 });
+
+
 
 // Teste da conexão
 db.connect((err) => {
