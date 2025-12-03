@@ -6,18 +6,15 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// 📌 Conexão com o MySQL da Railway
+// 📌 CONEXÃO CORRETA (rede pública)
 const db = mysql.createConnection({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_DATABASE,
-    port: process.env.DB_PORT
+    host: process.env.MYSQLHOST,
+    user: process.env.MYSQLUSER,
+    password: process.env.MYSQLPASSWORD,
+    database: process.env.MYSQLDATABASE,
+    port: process.env.MYSQLPORT
 });
 
-
-
-// Teste da conexão
 db.connect((err) => {
     if (err) {
         console.error("Erro ao conectar no MySQL:", err);
@@ -26,14 +23,10 @@ db.connect((err) => {
     console.log("Conectado ao MySQL da Railway!");
 });
 
-// Rota da API - cadastrar pessoa
 app.post("/pessoa", (req, res) => {
     const { nome, email, telefone, mensagem } = req.body;
 
-    const sql = `
-        INSERT INTO pessoa (nome, email, telefone, mensagem)
-        VALUES (?, ?, ?, ?)
-    `;
+    const sql = `INSERT INTO pessoa (nome, email, telefone, mensagem) VALUES (?, ?, ?, ?)`;
 
     db.query(sql, [nome, email, telefone, mensagem], (err, result) => {
         if (err) {
@@ -44,6 +37,8 @@ app.post("/pessoa", (req, res) => {
     });
 });
 
-app.listen(3000, () => console.log("Servidor rodando na porta 3000"));
+app.listen(process.env.PORT || 3000, () =>
+    console.log("Servidor rodando!")
+);
 
 
