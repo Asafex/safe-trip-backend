@@ -7,21 +7,18 @@ app.use(cors());
 app.use(express.json());
 
 // 📌 CONEXÃO CORRETA (rede pública)
-const db = mysql.createConnection({
+const db = mysql.createPool({
     host: process.env.MYSQLHOST,
     user: process.env.MYSQLUSER,
     password: process.env.MYSQLPASSWORD,
     database: process.env.MYSQLDATABASE,
-    port: process.env.MYSQLPORT
+    port: process.env.MYSQLPORT,
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0
 });
 
-db.connect((err) => {
-    if (err) {
-        console.error("Erro ao conectar no MySQL:", err);
-        return;
-    }
-    console.log("Conectado ao MySQL da Railway!");
-});
+
 
 app.post("/pessoa", (req, res) => {
     const { nome, email, telefone, mensagem } = req.body;
